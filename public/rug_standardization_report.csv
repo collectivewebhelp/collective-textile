@@ -1,0 +1,26 @@
+file,original_size,original_bbox,new_size,original_rug_area_%,note
+IMG_0999.jpg,2048x2048,944x1976,1110x2048,44.5,trimmed excess white space + added uniform white padding
+IMG_1002.jpg,1086x1448,681x1388,875x1582,60.1,trimmed excess white space + added uniform white padding
+IMG_1003.jpg,1086x1448,649x1351,839x1541,55.8,trimmed excess white space + added uniform white padding
+IMG_1004.jpg,2048x2048,1026x1979,1184x2048,48.4,trimmed excess white space + added uniform white padding
+IMG_1005.jpg,1086x1448,615x1303,799x1487,51.0,trimmed excess white space + added uniform white padding
+IMG_1006.PNG,1086x1448,775x1318,961x1504,65.0,trimmed excess white space + added uniform white padding
+IMG_1007.PNG,1024x1536,589x1459,795x1665,54.6,trimmed excess white space + added uniform white padding
+IMG_1008.jpg,2048x2048,840x1993,1009x2048,39.9,trimmed excess white space + added uniform white padding
+IMG_1012.jpg,2048x2048,894x1957,1073x2048,41.7,trimmed excess white space + added uniform white padding
+IMG_1014.jpg,1122x1402,917x1142,1077x1302,66.6,trimmed excess white space + added uniform white padding
+IMG_1016.jpg,2048x2048,637x1967,834x2048,29.9,trimmed excess white space + added uniform white padding
+IMG_1024.jpg,2048x2048,617x1945,822x2048,28.6,trimmed excess white space + added uniform white padding
+IMG_1028.jpg,2048x2048,770x1946,964x2048,35.7,trimmed excess white space + added uniform white padding
+IMG_1040.jpg,2048x2048,1061x1885,1263x2048,47.7,trimmed excess white space + added uniform white padding
+IMG_1042.jpg,2048x2048,798x1968,981x2048,37.4,trimmed excess white space + added uniform white padding
+IMG_1057.jpg,2048x2048,933x1900,1135x2048,42.3,trimmed excess white space + added uniform white padding
+IMG_1059.jpg,2048x2048,807x1982,985x2048,38.1,trimmed excess white space + added uniform white padding
+IMG_1062.jpg,2048x2048,1222x2005,1347x2048,58.4,trimmed excess white space + added uniform white padding
+IMG_1064.jpg,2048x2048,1692x1939,1819x2048,78.2,trimmed excess white space + added uniform white padding
+IMG_1066.jpg,2048x2048,1689x1938,1817x2048,78.0,trimmed excess white space + added uniform white padding
+IMG_1072.jpg,2048x2048,896x1982,1064x2048,42.3,trimmed excess white space + added uniform white padding
+IMG_1073.jpg,1254x1254,1076x1133,1236x1293,77.5,trimmed excess white space + added uniform white padding
+IMG_1074.jpg,1086x1448,757x1192,923x1358,57.4,trimmed excess white space + added uniform white padding
+IMG_1075.jpg,1085x1449,700x1313,886x1499,58.5,trimmed excess white space + added uniform white padding
+IMG_1076.jpg,1085x1449,622x1293,804x1475,51.2,trimmed excess white space + added uniform white padding
