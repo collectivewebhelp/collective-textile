@@ -1,6 +1,7 @@
 "use client";
 
-import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
 import NavItem from "@/components/nav-item";
 
@@ -28,6 +29,51 @@ function NewsletterButton() {
 }
 
 export default function Page() {
+  const router = useRouter();
+
+  const [entryMode] = useState<string | null>(() => {
+    if (typeof window === "undefined") return null;
+    return sessionStorage.getItem("ct-entry");
+  });
+
+  const [leavingTo, setLeavingTo] = useState<"archive" | "about" | null>(null);
+
+  const returningHome = entryMode === "return-home";
+
+  useEffect(() => {
+    if (entryMode) {
+      sessionStorage.removeItem("ct-entry");
+    }
+  }, [entryMode]);
+
+  function goOut(
+    event: React.MouseEvent<HTMLAnchorElement>,
+    href: string,
+    destination: "archive" | "about"
+  ) {
+    event.preventDefault();
+
+    if (leavingTo) return;
+
+    sessionStorage.setItem(
+      "ct-entry",
+      destination === "about" ? "home-to-about" : "home-to-archive"
+    );
+
+    setLeavingTo(destination);
+
+    setTimeout(
+      () => {
+        router.push(href);
+      },
+      destination === "archive" ? 920 : 560
+    );
+  }
+
+  const leavingArchive = leavingTo === "archive";
+  const leavingAbout = leavingTo === "about";
+  const leaving = leavingArchive || leavingAbout;
+
   return (
     <>
       <div className="desktop-layout">
@@ -36,17 +82,11 @@ export default function Page() {
             position: "fixed",
             inset: 0,
             overflow: "hidden",
-            fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+            fontFamily: "'Aileron', 'Helvetica Neue', sans-serif",
+            background: "#f4f1ea",
           }}
         >
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{
-              duration: 1.35,
-              delay: 0.1,
-              ease: EASE,
-            }}
+          <div
             style={{
               position: "fixed",
               top: 0,
@@ -60,11 +100,12 @@ export default function Page() {
           />
 
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            initial={{ y: "0%" }}
+            animate={{
+              y: leavingArchive ? "-100%" : "0%",
+            }}
             transition={{
-              duration: 1.35,
-              delay: 0.1,
+              duration: 0.92,
               ease: EASE,
             }}
             style={{
@@ -82,17 +123,23 @@ export default function Page() {
           <motion.img
             src="/sheep.JPG"
             alt="Archive photograph"
-            initial={{ opacity: 0, x: "-8%" }}
-            animate={{ opacity: 1, x: "0%" }}
+            initial={{
+              opacity: returningHome ? 0 : 0,
+              x: returningHome ? "-2%" : "-8%",
+            }}
+            animate={{
+              opacity: leaving ? 0 : 1,
+              x: leaving ? "-2.5%" : "0%",
+            }}
             transition={{
               opacity: {
-                duration: 1.2,
-                delay: 0.75,
+                duration: leaving ? 0.78 : returningHome ? 0.82 : 1.2,
+                delay: leaving ? 0.04 : returningHome ? 0.12 : 0.75,
                 ease: EASE,
               },
               x: {
-                duration: 1.4,
-                delay: 0.55,
+                duration: leaving ? 0.9 : returningHome ? 0.95 : 1.4,
+                delay: leaving ? 0 : returningHome ? 0.04 : 0.55,
                 ease: EASE,
               },
             }}
@@ -112,17 +159,23 @@ export default function Page() {
             src="/star.png"
             alt="Collective Textile star mark"
             className="star-desktop"
-            initial={{ opacity: 0, y: -24 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{
+              opacity: returningHome ? 0 : 0,
+              y: returningHome ? -12 : -24,
+            }}
+            animate={{
+              opacity: leaving ? 0 : 1,
+              y: leaving ? -18 : 0,
+            }}
             transition={{
               opacity: {
-                duration: 1.1,
-                delay: 1.05,
+                duration: leaving ? 0.76 : returningHome ? 0.78 : 1.1,
+                delay: leaving ? 0.04 : returningHome ? 0.18 : 1.05,
                 ease: EASE,
               },
               y: {
-                duration: 1.1,
-                delay: 0.85,
+                duration: leaving ? 0.9 : returningHome ? 0.9 : 1.1,
+                delay: leaving ? 0 : returningHome ? 0.08 : 0.85,
                 ease: EASE,
               },
             }}
@@ -138,7 +191,14 @@ export default function Page() {
             }}
           />
 
-          <nav
+          <motion.nav
+            initial={{ opacity: returningHome ? 0 : 1 }}
+            animate={{ opacity: leaving ? 0 : 1 }}
+            transition={{
+              duration: leaving ? 0.38 : returningHome ? 0.55 : 0,
+              delay: leaving ? 0 : returningHome ? 0.18 : 0,
+              ease: EASE,
+            }}
             style={{
               position: "fixed",
               top: 0,
@@ -150,31 +210,40 @@ export default function Page() {
               alignItems: "baseline",
               gap: "2.5rem",
               padding: "1.4rem 2.5rem",
+              pointerEvents: leaving ? "none" : "auto",
             }}
           >
-            <Link href="/archive" style={{ textDecoration: "none" }}>
+            <a
+              href="/archive"
+              onClick={(event) => goOut(event, "/archive", "archive")}
+              style={{ textDecoration: "none" }}
+            >
               <NavItem color="light" underlineColor="#f4f1ea">
                 (archive)
               </NavItem>
-            </Link>
+            </a>
 
             <NavItem color="light" underlineColor="#f4f1ea">
               (materials)
             </NavItem>
 
-            <Link href="/about" style={{ textDecoration: "none" }}>
+            <a
+              href="/about"
+              onClick={(event) => goOut(event, "/about", "about")}
+              style={{ textDecoration: "none" }}
+            >
               <NavItem color="light" underlineColor="#f4f1ea">
                 (about)
               </NavItem>
-            </Link>
-          </nav>
+            </a>
+          </motion.nav>
 
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            initial={{ opacity: returningHome ? 0 : 0 }}
+            animate={{ opacity: leaving ? 0 : 1 }}
             transition={{
-              duration: 1.1,
-              delay: 0.85,
+              duration: leaving ? 0.38 : returningHome ? 0.6 : 1.1,
+              delay: leaving ? 0 : returningHome ? 0.24 : 0.85,
               ease: EASE,
             }}
             style={{
@@ -185,12 +254,12 @@ export default function Page() {
               display: "flex",
               alignItems: "baseline",
               gap: "1rem",
-              pointerEvents: "auto",
+              pointerEvents: leaving ? "none" : "auto",
             }}
           >
             <span
               style={{
-                fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+                fontFamily: "'Aileron', 'Helvetica Neue', sans-serif",
                 fontSize: 10,
                 letterSpacing: "0.18em",
                 textTransform: "uppercase",
@@ -205,7 +274,7 @@ export default function Page() {
               type="email"
               placeholder="(Email)"
               style={{
-                fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+                fontFamily: "'Aileron', 'Helvetica Neue', sans-serif",
                 background: "transparent",
                 border: "none",
                 borderBottom: "1px solid rgba(244,241,234,0.85)",
@@ -229,7 +298,7 @@ export default function Page() {
             position: "fixed",
             inset: 0,
             overflow: "hidden",
-            fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+            fontFamily: "'Aileron', 'Helvetica Neue', sans-serif",
             background: "#0f0f0d",
           }}
         >
@@ -269,21 +338,29 @@ export default function Page() {
               padding: "1.2rem 1rem",
             }}
           >
-            <Link href="/archive" style={{ textDecoration: "none" }}>
+            <a
+              href="/archive"
+              onClick={(event) => goOut(event, "/archive", "archive")}
+              style={{ textDecoration: "none" }}
+            >
               <NavItem color="light" underlineColor="#f4f1ea">
                 (archive)
               </NavItem>
-            </Link>
+            </a>
 
             <NavItem color="light" underlineColor="#f4f1ea">
               (materials)
             </NavItem>
 
-            <Link href="/about" style={{ textDecoration: "none" }}>
+            <a
+              href="/about"
+              onClick={(event) => goOut(event, "/about", "about")}
+              style={{ textDecoration: "none" }}
+            >
               <NavItem color="light" underlineColor="#f4f1ea">
                 (about)
               </NavItem>
-            </Link>
+            </a>
           </nav>
         </div>
       </div>
@@ -322,9 +399,7 @@ export default function Page() {
           .mobile-layout {
             display: none !important;
           }
-        }
 
-        @media (min-width: 768px) {
           .star-desktop {
             display: block !important;
           }

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
 import NavItem from "@/components/nav-item";
+import { ReturnHomeLink } from "@/components/page-transition";
 import { rugImages } from "@/lib/rug-images";
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
@@ -49,10 +50,16 @@ export default function ArchivePage() {
       style={{
         minHeight: "100vh",
         background: "#ffffff",
-        fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+        fontFamily: "'Aileron', 'Helvetica Neue', sans-serif",
       }}
     >
-      <nav
+      <motion.nav
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{
+          duration: 0.65,
+          ease: EASE,
+        }}
         style={{
           position: "fixed",
           top: 0,
@@ -67,11 +74,11 @@ export default function ArchivePage() {
           background: "transparent",
         }}
       >
-        <Link href="/" style={{ textDecoration: "none" }}>
+        <ReturnHomeLink variant="archive" style={{ textDecoration: "none" }}>
           <NavItem color="dark" underlineColor="#0a0a0a">
             (home)
           </NavItem>
-        </Link>
+        </ReturnHomeLink>
 
         <NavItem color="dark" underlineColor="#0a0a0a">
           (materials)
@@ -82,13 +89,14 @@ export default function ArchivePage() {
             (about)
           </NavItem>
         </Link>
-      </nav>
+      </motion.nav>
 
       <motion.section
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{
-          duration: 0.7,
+          duration: 0.75,
+          delay: 0.08,
           ease: EASE,
         }}
         style={{

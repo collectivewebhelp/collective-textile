@@ -1,23 +1,45 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
 import NavItem from "@/components/nav-item";
+import { ReturnHomeLink } from "@/components/page-transition";
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
 export default function AboutPage() {
+  const [entryMode] = useState<string | null>(() => {
+    if (typeof window === "undefined") return null;
+    return sessionStorage.getItem("ct-entry");
+  });
+
+  const fromHome = entryMode === "home-to-about";
+
+  useEffect(() => {
+    if (entryMode) {
+      sessionStorage.removeItem("ct-entry");
+    }
+  }, [entryMode]);
+
   return (
     <main
       style={{
         minHeight: "100vh",
-        fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+        fontFamily: "'Aileron', 'Helvetica Neue', sans-serif",
         display: "grid",
         gridTemplateColumns: "52fr 48fr",
-        background: "#ffffff",
+        background: "#f4f1ea",
       }}
     >
-      <nav
+      <motion.nav
+        initial={{ opacity: fromHome ? 0 : 0 }}
+        animate={{ opacity: 1 }}
+        transition={{
+          duration: 0.65,
+          delay: fromHome ? 0.18 : 0,
+          ease: EASE,
+        }}
         style={{
           position: "fixed",
           top: 0,
@@ -41,23 +63,23 @@ export default function AboutPage() {
           (materials)
         </NavItem>
 
-        <Link href="/" style={{ textDecoration: "none" }}>
+        <ReturnHomeLink variant="about" style={{ textDecoration: "none" }}>
           <NavItem color="dark" underlineColor="#0a0a0a">
             (home)
           </NavItem>
-        </Link>
-      </nav>
+        </ReturnHomeLink>
+      </motion.nav>
 
       <motion.section
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{
-          duration: 0.95,
-          delay: 0.1,
+          duration: 0.85,
+          delay: fromHome ? 0.18 : 0.08,
           ease: EASE,
         }}
         style={{
-          background: "#ffffff",
+          background: "#f4f1ea",
           padding: "2.5rem 2rem 2rem 2rem",
           display: "flex",
           flexDirection: "column",
@@ -72,22 +94,22 @@ export default function AboutPage() {
             display: "flex",
             alignItems: "center",
             justifyContent: "flex-start",
-            minHeight: "180px",
-            maxHeight: "260px",
+            minHeight: "160px",
+            maxHeight: "230px",
           }}
         >
           <motion.img
             src="/ascii-sheep.png"
             alt=""
             initial={{ opacity: 0 }}
-            animate={{ opacity: 0.8 }}
+            animate={{ opacity: 0.78 }}
             transition={{
               duration: 0.8,
-              delay: 0.95,
+              delay: fromHome ? 0.5 : 0.75,
               ease: EASE,
             }}
             style={{
-              width: "200px",
+              width: "185px",
               height: "auto",
               display: "block",
             }}
@@ -95,22 +117,22 @@ export default function AboutPage() {
         </div>
 
         <motion.p
-          initial={{ opacity: 0, y: 8 }}
+          initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{
-            duration: 0.85,
-            delay: 0.45,
+            duration: 0.8,
+            delay: fromHome ? 0.28 : 0.34,
             ease: EASE,
           }}
           style={{
-            fontSize: 11,
-            lineHeight: 1.8,
-            letterSpacing: "0.14em",
+            fontSize: 12,
+            lineHeight: 1.75,
+            letterSpacing: "0.12em",
             fontWeight: 700,
             textTransform: "uppercase",
             color: "#0a0a0a",
-            marginBottom: "28px",
-            maxWidth: 320,
+            marginBottom: "32px",
+            maxWidth: 360,
           }}
         >
           Amidst the rapid tide of modernisation, the craft culture of the
@@ -120,21 +142,21 @@ export default function AboutPage() {
         </motion.p>
 
         <motion.p
-          initial={{ opacity: 0, y: 8 }}
+          initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{
-            duration: 0.85,
-            delay: 0.58,
+            duration: 0.8,
+            delay: fromHome ? 0.4 : 0.46,
             ease: EASE,
           }}
           style={{
-            fontSize: 10,
-            lineHeight: 1.9,
-            letterSpacing: "0.06em",
+            fontSize: 10.5,
+            lineHeight: 1.95,
+            letterSpacing: "0.055em",
             fontWeight: 400,
-            color: "rgba(10,10,10,0.7)",
+            color: "rgba(10,10,10,0.68)",
             marginBottom: "24px",
-            maxWidth: 320,
+            maxWidth: 350,
           }}
         >
           Collective Textile showcases Moroccan carpets and textiles — focusing
@@ -144,21 +166,21 @@ export default function AboutPage() {
         </motion.p>
 
         <motion.p
-          initial={{ opacity: 0, y: 8 }}
+          initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{
-            duration: 0.85,
-            delay: 0.71,
+            duration: 0.8,
+            delay: fromHome ? 0.52 : 0.58,
             ease: EASE,
           }}
           style={{
-            fontSize: 10,
-            lineHeight: 1.9,
-            letterSpacing: "0.06em",
+            fontSize: 10.5,
+            lineHeight: 1.95,
+            letterSpacing: "0.055em",
             fontWeight: 400,
-            color: "rgba(10,10,10,0.7)",
-            marginBottom: "0",
-            maxWidth: 320,
+            color: "rgba(10,10,10,0.68)",
+            marginBottom: 0,
+            maxWidth: 350,
           }}
         >
           Founded in Milan in 2018. Our catalogue is updated regularly — contact
@@ -169,8 +191,8 @@ export default function AboutPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{
-            duration: 0.85,
-            delay: 0.84,
+            duration: 0.75,
+            delay: fromHome ? 0.62 : 0.72,
             ease: EASE,
           }}
           style={{
@@ -221,6 +243,7 @@ export default function AboutPage() {
               color: "rgba(10,10,10,0.7)",
               fontWeight: 700,
               cursor: "pointer",
+              fontFamily: "'Aileron', 'Helvetica Neue', sans-serif",
             }}
           >
             Send
@@ -229,11 +252,11 @@ export default function AboutPage() {
       </motion.section>
 
       <motion.section
-        initial={{ opacity: 0 }}
+        initial={{ opacity: fromHome ? 1 : 0 }}
         animate={{ opacity: 1 }}
         transition={{
-          duration: 0.95,
-          delay: 0.1,
+          duration: fromHome ? 0 : 0.85,
+          delay: fromHome ? 0 : 0.08,
           ease: EASE,
         }}
         style={{
@@ -302,6 +325,10 @@ export default function AboutPage() {
         input::placeholder {
           color: rgba(10,10,10,0.45);
           font-weight: 500;
+        }
+
+        input:focus {
+          border-bottom-color: currentColor !important;
         }
       `}</style>
     </main>
