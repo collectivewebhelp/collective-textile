@@ -270,22 +270,48 @@ export default function Page() {
               Newsletter
             </span>
 
-            <input
-              type="email"
-              placeholder="(Email)"
+            <div
               style={{
-                fontFamily: "'Aileron', 'Helvetica Neue', sans-serif",
-                background: "transparent",
-                border: "none",
-                borderBottom: "1px solid rgba(244,241,234,0.85)",
-                padding: "0.15rem 0.3rem",
+                position: "relative",
                 width: 200,
-                fontSize: 10,
-                letterSpacing: "0.1em",
-                color: "rgba(244,241,234,0.85)",
-                outline: "none",
+                paddingBottom: "0.2rem",
               }}
-            />
+            >
+              <input
+                type="email"
+                placeholder="(Email)"
+                style={{
+                  fontFamily: "'Aileron', 'Helvetica Neue', sans-serif",
+                  background: "transparent",
+                  border: "none",
+                  padding: "0.15rem 0.3rem",
+                  width: "100%",
+                  fontSize: 10,
+                  letterSpacing: "0.1em",
+                  color: "rgba(244,241,234,0.85)",
+                  outline: "none",
+                }}
+              />
+
+              <motion.div
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{
+                  duration: 0.9,
+                  delay: returningHome ? 0.42 : 1,
+                  ease: EASE,
+                }}
+                style={{
+                  position: "absolute",
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  height: "1px",
+                  background: "rgba(244,241,234,0.85)",
+                  transformOrigin: "left center",
+                }}
+              />
+            </div>
 
             <NewsletterButton />
           </motion.div>

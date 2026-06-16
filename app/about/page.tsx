@@ -25,7 +25,8 @@ export default function AboutPage() {
   return (
     <main
       style={{
-        minHeight: "100vh",
+        height: "100vh",
+        overflow: "hidden",
         fontFamily: "'Aileron', 'Helvetica Neue', sans-serif",
         display: "grid",
         gridTemplateColumns: "52fr 48fr",
@@ -85,17 +86,19 @@ export default function AboutPage() {
           flexDirection: "column",
           alignItems: "flex-start",
           justifyContent: "flex-start",
-          minHeight: "100vh",
+          height: "100vh",
+          overflow: "hidden",
         }}
       >
         <div
           style={{
-            flex: 1,
+            width: "100%",
             display: "flex",
             alignItems: "center",
-            justifyContent: "flex-start",
-            minHeight: "160px",
-            maxHeight: "230px",
+            justifyContent: "center",
+            minHeight: "165px",
+            maxHeight: "220px",
+            marginBottom: "0.35rem",
           }}
         >
           <motion.img
@@ -104,12 +107,12 @@ export default function AboutPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.78 }}
             transition={{
-              duration: 0.8,
-              delay: fromHome ? 0.5 : 0.75,
+              duration: 0.9,
+              delay: fromHome ? 0.45 : 0.7,
               ease: EASE,
             }}
             style={{
-              width: "185px",
+              width: "235px",
               height: "auto",
               display: "block",
             }}
@@ -125,14 +128,14 @@ export default function AboutPage() {
             ease: EASE,
           }}
           style={{
-            fontSize: 12,
-            lineHeight: 1.75,
-            letterSpacing: "0.12em",
+            fontSize: 16,
+            lineHeight: 1.72,
+            letterSpacing: "0.105em",
             fontWeight: 700,
             textTransform: "uppercase",
             color: "#0a0a0a",
-            marginBottom: "32px",
-            maxWidth: 360,
+            marginBottom: "22px",
+            maxWidth: 480,
           }}
         >
           Amidst the rapid tide of modernisation, the craft culture of the
@@ -150,13 +153,14 @@ export default function AboutPage() {
             ease: EASE,
           }}
           style={{
-            fontSize: 10.5,
-            lineHeight: 1.95,
-            letterSpacing: "0.055em",
+            fontSize: 13,
+            lineHeight: 1.78,
+            letterSpacing: "0.045em",
             fontWeight: 400,
             color: "rgba(10,10,10,0.68)",
-            marginBottom: "24px",
-            maxWidth: 350,
+            marginTop: "10px",
+            marginBottom: "34px",
+            maxWidth: 480,
           }}
         >
           Collective Textile showcases Moroccan carpets and textiles — focusing
@@ -174,13 +178,13 @@ export default function AboutPage() {
             ease: EASE,
           }}
           style={{
-            fontSize: 10.5,
-            lineHeight: 1.95,
-            letterSpacing: "0.055em",
+            fontSize: 13,
+            lineHeight: 1.78,
+            letterSpacing: "0.045em",
             fontWeight: 400,
             color: "rgba(10,10,10,0.68)",
             marginBottom: 0,
-            maxWidth: 350,
+            maxWidth: 480,
           }}
         >
           Founded in Milan in 2018. Our catalogue is updated regularly — contact
@@ -197,7 +201,7 @@ export default function AboutPage() {
           }}
           style={{
             marginTop: "auto",
-            paddingTop: "2rem",
+            paddingTop: "1.35rem",
             display: "flex",
             alignItems: "baseline",
             gap: "1rem",
@@ -215,21 +219,47 @@ export default function AboutPage() {
             Newsletter
           </span>
 
-          <input
-            type="email"
-            placeholder="(Email)"
+          <div
             style={{
-              background: "transparent",
-              border: "none",
-              borderBottom: "1px solid rgba(10,10,10,0.4)",
-              padding: "0.15rem 0.3rem",
+              position: "relative",
               width: 160,
-              fontSize: 10,
-              letterSpacing: "0.1em",
-              color: "#0a0a0a",
-              outline: "none",
+              paddingBottom: "0.2rem",
             }}
-          />
+          >
+            <input
+              type="email"
+              placeholder="(Email)"
+              style={{
+                background: "transparent",
+                border: "none",
+                padding: "0.15rem 0.3rem",
+                width: "100%",
+                fontSize: 10,
+                letterSpacing: "0.1em",
+                color: "#0a0a0a",
+                outline: "none",
+              }}
+            />
+
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{
+                duration: 0.9,
+                delay: fromHome ? 0.78 : 0.9,
+                ease: EASE,
+              }}
+              style={{
+                position: "absolute",
+                left: 0,
+                right: 0,
+                bottom: 0,
+                height: "1px",
+                background: "rgba(10,10,10,0.4)",
+                transformOrigin: "left center",
+              }}
+            />
+          </div>
 
           <button
             type="submit"
@@ -263,16 +293,23 @@ export default function AboutPage() {
           background: "#E3010F",
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
+          alignItems: "flex-end",
           justifyContent: "center",
           padding: "4rem 2.5rem 2.5rem 2.5rem",
           height: "100vh",
           overflow: "hidden",
         }}
       >
-        <img
+        <motion.img
           src="/IMG_2146.jpeg"
           alt="Collective Textile founders"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{
+            duration: 1.2,
+            delay: fromHome ? 0.18 : 0.18,
+            ease: EASE,
+          }}
           style={{
             width: "85%",
             height: "72vh",
@@ -287,7 +324,7 @@ export default function AboutPage() {
           style={{
             display: "flex",
             justifyContent: "space-between",
-            width: "85%",
+            width: "87%",
             paddingTop: "1.5rem",
           }}
         >
@@ -296,27 +333,23 @@ export default function AboutPage() {
             target="_blank"
             rel="noopener noreferrer"
             style={{
-              fontSize: 9,
-              letterSpacing: "0.22em",
-              textTransform: "lowercase",
-              color: "rgba(244,241,234,0.85)",
               textDecoration: "none",
             }}
           >
-            (instagram)
+            <NavItem color="light" underlineColor="#f4f1ea">
+              (instagram)
+            </NavItem>
           </a>
 
           <a
             href="mailto:collectivetextile@gmail.com"
             style={{
-              fontSize: 9,
-              letterSpacing: "0.22em",
-              textTransform: "lowercase",
-              color: "rgba(244,241,234,0.85)",
               textDecoration: "none",
             }}
           >
-            (email)
+            <NavItem color="light" underlineColor="#f4f1ea">
+              (email)
+            </NavItem>
           </a>
         </div>
       </motion.section>
@@ -329,6 +362,10 @@ export default function AboutPage() {
 
         input:focus {
           border-bottom-color: currentColor !important;
+        }
+
+        body {
+          overflow: hidden;
         }
       `}</style>
     </main>
