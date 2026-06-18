@@ -326,19 +326,27 @@ export default function Page() {
             overflow: "hidden",
             fontFamily: "'Aileron', 'Helvetica Neue', sans-serif",
             background: "#0f0f0d",
+            height: "100dvh",
           }}
         >
-          <img
-            src="/preview.webp"
-            alt="Hero"
+          <motion.img
+            src="/hero.webp"
+            alt="Collective Textile mobile archive image"
+            initial={{ opacity: 0, scale: 1.015 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{
+              duration: 1.15,
+              ease: EASE,
+            }}
             style={{
               position: "fixed",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
+              inset: 0,
+              width: "100vw",
+              height: "100dvh",
               objectFit: "cover",
+              objectPosition: "center center",
               zIndex: 0,
+              display: "block",
             }}
           />
 
@@ -346,12 +354,21 @@ export default function Page() {
             style={{
               position: "fixed",
               inset: 0,
-              background: "rgba(0,0,0,0.35)",
+              background:
+                "linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.04) 42%, rgba(0,0,0,0.26))",
               zIndex: 1,
+              pointerEvents: "none",
             }}
           />
 
-          <nav
+          <motion.nav
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: leaving ? 0 : 1, y: leaving ? -6 : 0 }}
+            transition={{
+              duration: 0.65,
+              delay: 0.25,
+              ease: EASE,
+            }}
             style={{
               position: "fixed",
               top: 0,
@@ -359,9 +376,13 @@ export default function Page() {
               right: 0,
               zIndex: 30,
               display: "flex",
-              justifyContent: "center",
-              gap: "1.8rem",
-              padding: "1.2rem 1rem",
+              justifyContent: "space-between",
+              alignItems: "baseline",
+              gap: "0.75rem",
+              padding: "1.2rem 1.05rem",
+              boxSizing: "border-box",
+              width: "100%",
+              pointerEvents: leaving ? "none" : "auto",
             }}
           >
             <a
@@ -387,7 +408,7 @@ export default function Page() {
                 (about)
               </NavItem>
             </a>
-          </nav>
+          </motion.nav>
         </div>
       </div>
 
@@ -418,6 +439,13 @@ export default function Page() {
         @media (max-width: 767px) {
           .mobile-layout {
             display: block;
+          }
+
+          html,
+          body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
           }
         }
 
