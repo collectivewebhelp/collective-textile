@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useEffect, useState, type MouseEvent } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
 import NavItem from "@/components/nav-item";
@@ -28,26 +29,127 @@ function NewsletterButton() {
   );
 }
 
+function MobileNewsletter({ leaving }: { leaving: boolean }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 6 }}
+      animate={{
+        opacity: leaving ? 0 : 1,
+        y: leaving ? 4 : 0,
+      }}
+      transition={{
+        duration: leaving ? 0.42 : 0.72,
+        delay: leaving ? 0 : 0.38,
+        ease: EASE,
+      }}
+      style={{
+        position: "fixed",
+        left: "1.1rem",
+        right: "1.1rem",
+        bottom: "1.15rem",
+        zIndex: 30,
+        display: "flex",
+        alignItems: "baseline",
+        justifyContent: "space-between",
+        gap: "0.85rem",
+      }}
+    >
+      <span
+        style={{
+          fontFamily: "'Courier New', Courier, monospace",
+          fontSize: 10,
+          letterSpacing: "0.08em",
+          textTransform: "uppercase",
+          color: "#0a0a0a",
+        }}
+      >
+        NEWSLETTER
+      </span>
+
+      <div
+        style={{
+          position: "relative",
+          flex: 1,
+          maxWidth: 122,
+          paddingBottom: "0.18rem",
+        }}
+      >
+        <input
+          type="email"
+          placeholder="(EMAIL)"
+          style={{
+            fontFamily: "'Courier New', Courier, monospace",
+            background: "transparent",
+            border: "none",
+            padding: 0,
+            width: "100%",
+            fontSize: 10,
+            letterSpacing: "0.08em",
+            color: "#0a0a0a",
+            outline: "none",
+            textTransform: "uppercase",
+          }}
+        />
+
+        <motion.div
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: leaving ? 0 : 1 }}
+          transition={{
+            duration: 0.85,
+            delay: leaving ? 0 : 0.52,
+            ease: EASE,
+          }}
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            bottom: 0,
+            height: "1px",
+            background: "rgba(10,10,10,0.65)",
+            transformOrigin: "left center",
+          }}
+        />
+      </div>
+
+      <button
+        type="submit"
+        style={{
+          background: "none",
+          border: "none",
+          padding: 0,
+          fontFamily: "'Courier New', Courier, monospace",
+          fontSize: 10,
+          letterSpacing: "0.08em",
+          textTransform: "uppercase",
+          color: "#0a0a0a",
+          cursor: "pointer",
+        }}
+      >
+        SEND
+      </button>
+    </motion.div>
+  );
+}
+
 export default function Page() {
   const router = useRouter();
 
-  const [entryMode] = useState<string | null>(() => {
-    if (typeof window === "undefined") return null;
-    return sessionStorage.getItem("ct-entry");
-  });
-
+  const [entryMode, setEntryMode] = useState<string | null>(null);
   const [leavingTo, setLeavingTo] = useState<"archive" | "about" | null>(null);
+
+  useEffect(() => {
+    const storedEntryMode = sessionStorage.getItem("ct-entry");
+
+    if (storedEntryMode) {
+      setEntryMode(storedEntryMode);
+      sessionStorage.removeItem("ct-entry");
+    }
+  }, []);
 
   const returningHome = entryMode === "return-home";
 
-  useEffect(() => {
-    if (entryMode) {
-      sessionStorage.removeItem("ct-entry");
-    }
-  }, [entryMode]);
-
-  function goOut(
-    event: React.MouseEvent<HTMLAnchorElement>,
+  function goDesktopOut(
+    event: MouseEvent<HTMLAnchorElement>,
     href: string,
     destination: "archive" | "about"
   ) {
@@ -62,12 +164,21 @@ export default function Page() {
 
     setLeavingTo(destination);
 
-    setTimeout(
-      () => {
-        router.push(href);
-      },
-      destination === "archive" ? 920 : 560
-    );
+    setTimeout(() => {
+      router.push(href);
+    }, destination === "archive" ? 920 : 560);
+  }
+
+  function goMobileAbout(event: MouseEvent<HTMLAnchorElement>) {
+    event.preventDefault();
+
+    if (leavingTo) return;
+
+    setLeavingTo("about");
+
+    setTimeout(() => {
+      router.push("/about");
+    }, 780);
   }
 
   const leavingArchive = leavingTo === "archive";
@@ -124,7 +235,7 @@ export default function Page() {
             src="/sheep.JPG"
             alt="Archive photograph"
             initial={{
-              opacity: returningHome ? 0 : 0,
+              opacity: 0,
               x: returningHome ? "-2%" : "-8%",
             }}
             animate={{
@@ -160,7 +271,7 @@ export default function Page() {
             alt="Collective Textile star mark"
             className="star-desktop"
             initial={{
-              opacity: returningHome ? 0 : 0,
+              opacity: 0,
               y: returningHome ? -12 : -24,
             }}
             animate={{
@@ -192,11 +303,11 @@ export default function Page() {
           />
 
           <motion.nav
-            initial={{ opacity: returningHome ? 0 : 1 }}
+            initial={{ opacity: 1 }}
             animate={{ opacity: leaving ? 0 : 1 }}
             transition={{
-              duration: leaving ? 0.38 : returningHome ? 0.55 : 0,
-              delay: leaving ? 0 : returningHome ? 0.18 : 0,
+              duration: leaving ? 0.38 : 0.55,
+              delay: leaving ? 0 : 0.18,
               ease: EASE,
             }}
             style={{
@@ -215,7 +326,7 @@ export default function Page() {
           >
             <a
               href="/archive"
-              onClick={(event) => goOut(event, "/archive", "archive")}
+              onClick={(event) => goDesktopOut(event, "/archive", "archive")}
               style={{ textDecoration: "none" }}
             >
               <NavItem color="light" underlineColor="#f4f1ea">
@@ -223,13 +334,15 @@ export default function Page() {
               </NavItem>
             </a>
 
-            <NavItem color="light" underlineColor="#f4f1ea">
-              (materials)
-            </NavItem>
+            <Link href="/materials" style={{ textDecoration: "none" }}>
+              <NavItem color="light" underlineColor="#f4f1ea">
+                (materials)
+              </NavItem>
+            </Link>
 
             <a
               href="/about"
-              onClick={(event) => goOut(event, "/about", "about")}
+              onClick={(event) => goDesktopOut(event, "/about", "about")}
               style={{ textDecoration: "none" }}
             >
               <NavItem color="light" underlineColor="#f4f1ea">
@@ -239,11 +352,11 @@ export default function Page() {
           </motion.nav>
 
           <motion.div
-            initial={{ opacity: returningHome ? 0 : 0 }}
+            initial={{ opacity: 0 }}
             animate={{ opacity: leaving ? 0 : 1 }}
             transition={{
-              duration: leaving ? 0.38 : returningHome ? 0.6 : 1.1,
-              delay: leaving ? 0 : returningHome ? 0.24 : 0.85,
+              duration: leaving ? 0.38 : 1.1,
+              delay: leaving ? 0 : 0.85,
               ease: EASE,
             }}
             style={{
@@ -298,7 +411,7 @@ export default function Page() {
                 animate={{ scaleX: 1 }}
                 transition={{
                   duration: 0.9,
-                  delay: returningHome ? 0.42 : 1,
+                  delay: 1,
                   ease: EASE,
                 }}
                 style={{
@@ -325,48 +438,48 @@ export default function Page() {
             inset: 0,
             overflow: "hidden",
             fontFamily: "'Aileron', 'Helvetica Neue', sans-serif",
-            background: "#0f0f0d",
+            background: "#ffffff",
             height: "100dvh",
           }}
         >
           <motion.img
             src="/hero.webp"
             alt="Collective Textile mobile archive image"
-            initial={{ opacity: 0, scale: 1.015 }}
-            animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, scale: 1.004 }}
+            animate={{
+              opacity: leaving ? 0 : 1,
+              scale: leaving ? 0.996 : 1,
+            }}
             transition={{
-              duration: 1.15,
+              duration: leaving ? 0.62 : 0.9,
+              delay: leaving ? 0.06 : 0,
               ease: EASE,
             }}
             style={{
-              position: "fixed",
-              inset: 0,
+              position: "absolute",
+              top: "3.1rem",
+              left: 0,
+              right: 0,
+              bottom: "3.75rem",
               width: "100vw",
-              height: "100dvh",
-              objectFit: "cover",
+              height: "calc(100dvh - 6.85rem)",
+              objectFit: "contain",
               objectPosition: "center center",
               zIndex: 0,
               display: "block",
-            }}
-          />
-
-          <div
-            style={{
-              position: "fixed",
-              inset: 0,
-              background:
-                "linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.04) 42%, rgba(0,0,0,0.26))",
-              zIndex: 1,
-              pointerEvents: "none",
+              background: "#ffffff",
             }}
           />
 
           <motion.nav
             initial={{ opacity: 0, y: -6 }}
-            animate={{ opacity: leaving ? 0 : 1, y: leaving ? -6 : 0 }}
+            animate={{
+              opacity: leaving ? 0 : 1,
+              y: leaving ? -6 : 0,
+            }}
             transition={{
-              duration: 0.65,
-              delay: 0.25,
+              duration: leaving ? 0.42 : 0.65,
+              delay: leaving ? 0 : 0.16,
               ease: EASE,
             }}
             style={{
@@ -379,50 +492,69 @@ export default function Page() {
               justifyContent: "space-between",
               alignItems: "baseline",
               gap: "0.75rem",
-              padding: "1.2rem 1.05rem",
+              padding: "1.25rem 1.1rem",
               boxSizing: "border-box",
               width: "100%",
               pointerEvents: leaving ? "none" : "auto",
             }}
           >
-            <a
-              href="/archive"
-              onClick={(event) => goOut(event, "/archive", "archive")}
-              style={{ textDecoration: "none" }}
-            >
-              <NavItem color="light" underlineColor="#f4f1ea">
+            <Link href="/archive" style={{ textDecoration: "none" }}>
+              <NavItem color="dark" underlineColor="#0a0a0a">
                 (archive)
               </NavItem>
-            </a>
+            </Link>
 
-            <NavItem color="light" underlineColor="#f4f1ea">
-              (materials)
-            </NavItem>
+            <Link href="/materials" style={{ textDecoration: "none" }}>
+              <NavItem color="dark" underlineColor="#0a0a0a">
+                (materials)
+              </NavItem>
+            </Link>
 
             <a
               href="/about"
-              onClick={(event) => goOut(event, "/about", "about")}
+              onClick={goMobileAbout}
               style={{ textDecoration: "none" }}
             >
-              <NavItem color="light" underlineColor="#f4f1ea">
+              <NavItem color="dark" underlineColor="#0a0a0a">
                 (about)
               </NavItem>
             </a>
           </motion.nav>
+
+          <MobileNewsletter leaving={leaving} />
+
+          <motion.div
+            initial={{ y: "-100%" }}
+            animate={{ y: leavingAbout ? "0%" : "-100%" }}
+            transition={{
+              duration: 0.74,
+              ease: EASE,
+            }}
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              height: "50dvh",
+              background: "#E3010F",
+              zIndex: 80,
+              pointerEvents: "none",
+            }}
+          />
         </div>
       </div>
 
       <style>{`
         input::placeholder {
-          color: rgba(255,255,255,0.6);
+          color: rgba(10,10,10,0.7);
           font-weight: 500;
         }
 
-        input:focus {
-          border-bottom-color: currentColor !important;
+        .desktop-layout {
+          display: none;
         }
 
-        .desktop-layout {
+        .mobile-layout {
           display: none;
         }
 
@@ -430,26 +562,7 @@ export default function Page() {
           .desktop-layout {
             display: block;
           }
-        }
 
-        .mobile-layout {
-          display: none;
-        }
-
-        @media (max-width: 767px) {
-          .mobile-layout {
-            display: block;
-          }
-
-          html,
-          body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-          }
-        }
-
-        @media (min-width: 768px) {
           .mobile-layout {
             display: none !important;
           }
@@ -460,8 +573,24 @@ export default function Page() {
         }
 
         @media (max-width: 767px) {
+          .desktop-layout {
+            display: none !important;
+          }
+
+          .mobile-layout {
+            display: block;
+          }
+
           .star-desktop {
             display: none !important;
+          }
+
+          html,
+          body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #ffffff !important;
           }
         }
       `}</style>
