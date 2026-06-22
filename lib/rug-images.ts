@@ -32,8 +32,7 @@ export const rugImages = [
   "/thumbs/IMG_1064.jpg",
   "/thumbs/IMG_1066.jpg",
   "/thumbs/IMG_1072.jpg",
-  "/thumbs/ct-rug-007.jpg",
-
+  
   "/thumbs/IMG_1073.jpg",
   "/thumbs/IMG_1074.jpg",
   "/thumbs/IMG_1075.jpg",
