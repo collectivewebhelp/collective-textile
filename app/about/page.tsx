@@ -1,29 +1,38 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { motion } from "motion/react";
+import { motion, useMotionValue, useSpring } from "motion/react";
 import NavItem from "@/components/nav-item";
 import { ReturnHomeLink } from "@/components/page-transition";
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
-function MobileNewsletter() {
+function clamp(value: number, min: number, max: number) {
+  return Math.min(Math.max(value, min), max);
+}
+
+function MobileNewsletter({ fromHome }: { fromHome: boolean }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 5 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
         duration: 0.7,
-        delay: 0.38,
+        delay: fromHome ? 0.82 : 0.42,
         ease: EASE,
       }}
       style={{
+        position: "absolute",
+        left: "1.75rem",
+        right: "1.75rem",
+        bottom: "1.35rem",
+        zIndex: 90,
         display: "flex",
         alignItems: "baseline",
         justifyContent: "space-between",
         gap: "0.85rem",
-        width: "100%",
+        pointerEvents: "auto",
       }}
     >
       <span
@@ -68,7 +77,7 @@ function MobileNewsletter() {
           animate={{ scaleX: 1 }}
           transition={{
             duration: 0.85,
-            delay: 0.52,
+            delay: fromHome ? 0.92 : 0.52,
             ease: EASE,
           }}
           style={{
@@ -111,11 +120,132 @@ export default function AboutPage() {
 
   const fromHome = entryMode === "home-to-about";
 
+  const [pictureHeight, setPictureHeight] = useState(295);
+  const panelTargetY = useMotionValue(900);
+  const panelY = useSpring(panelTargetY, {
+    stiffness: 76,
+    damping: 24,
+    mass: 0.72,
+    restDelta: 0.001,
+  });
+
+  const pictureHeightRef = useRef(295);
+  const panelTargetRef = useRef(900);
+  const touchStartY = useRef<number | null>(null);
+  const initializedRef = useRef(false);
+
   useEffect(() => {
     if (entryMode) {
       sessionStorage.removeItem("ct-entry");
     }
   }, [entryMode]);
+
+  useEffect(() => {
+    function getPictureHeight() {
+      return Math.max(window.innerHeight * 0.41, 295);
+    }
+
+    function setPanelPosition(next: number) {
+      const maxY = pictureHeightRef.current;
+      const clamped = clamp(next, 0, maxY);
+
+      panelTargetRef.current = clamped;
+      panelTargetY.set(clamped);
+    }
+
+    function updateSize() {
+      const nextPictureHeight = getPictureHeight();
+      pictureHeightRef.current = nextPictureHeight;
+      setPictureHeight(nextPictureHeight);
+
+      if (!initializedRef.current) {
+        initializedRef.current = true;
+
+        if (fromHome) {
+          panelTargetRef.current = window.innerHeight + 40;
+          panelTargetY.set(window.innerHeight + 40);
+
+          window.setTimeout(() => {
+            setPanelPosition(nextPictureHeight);
+          }, 70);
+        } else {
+          setPanelPosition(nextPictureHeight);
+        }
+
+        return;
+      }
+
+      setPanelPosition(
+        clamp(panelTargetRef.current, 0, nextPictureHeight)
+      );
+    }
+
+    updateSize();
+    window.addEventListener("resize", updateSize);
+
+    return () => {
+      window.removeEventListener("resize", updateSize);
+    };
+  }, [fromHome, panelTargetY]);
+
+  useEffect(() => {
+    function setPanelPosition(next: number) {
+      const maxY = pictureHeightRef.current;
+      const clamped = clamp(next, 0, maxY);
+
+      panelTargetRef.current = clamped;
+      panelTargetY.set(clamped);
+    }
+
+    function movePanel(delta: number) {
+      if (window.innerWidth >= 768) return;
+
+      const next = panelTargetRef.current - delta * 0.62;
+      setPanelPosition(next);
+    }
+
+    function onWheel(event: WheelEvent) {
+      if (window.innerWidth >= 768) return;
+
+      event.preventDefault();
+      movePanel(event.deltaY);
+    }
+
+    function onTouchStart(event: TouchEvent) {
+      if (window.innerWidth >= 768) return;
+
+      touchStartY.current = event.touches[0]?.clientY ?? null;
+    }
+
+    function onTouchMove(event: TouchEvent) {
+      if (window.innerWidth >= 768) return;
+      if (touchStartY.current === null) return;
+
+      event.preventDefault();
+
+      const currentY = event.touches[0]?.clientY ?? touchStartY.current;
+      const delta = touchStartY.current - currentY;
+
+      touchStartY.current = currentY;
+      movePanel(delta * 1.05);
+    }
+
+    function onTouchEnd() {
+      touchStartY.current = null;
+    }
+
+    window.addEventListener("wheel", onWheel, { passive: false });
+    window.addEventListener("touchstart", onTouchStart, { passive: false });
+    window.addEventListener("touchmove", onTouchMove, { passive: false });
+    window.addEventListener("touchend", onTouchEnd);
+
+    return () => {
+      window.removeEventListener("wheel", onWheel);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("touchend", onTouchEnd);
+    };
+  }, [panelTargetY]);
 
   return (
     <>
@@ -131,7 +261,7 @@ export default function AboutPage() {
         }}
       >
         <motion.nav
-          initial={{ opacity: fromHome ? 0 : 0 }}
+          initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{
             duration: 0.65,
@@ -431,9 +561,7 @@ export default function AboutPage() {
               href="https://www.instagram.com/collective_textile/"
               target="_blank"
               rel="noopener noreferrer"
-              style={{
-                textDecoration: "none",
-              }}
+              style={{ textDecoration: "none" }}
             >
               <NavItem color="light" underlineColor="#f4f1ea">
                 (instagram)
@@ -442,9 +570,7 @@ export default function AboutPage() {
 
             <a
               href="mailto:collectivetextile@gmail.com"
-              style={{
-                textDecoration: "none",
-              }}
+              style={{ textDecoration: "none" }}
             >
               <NavItem color="light" underlineColor="#f4f1ea">
                 (email)
@@ -457,102 +583,122 @@ export default function AboutPage() {
       <main className="about-mobile">
         <section
           style={{
+            position: "fixed",
+            inset: 0,
+            width: "100vw",
             height: "100dvh",
             background: "#f4f1ea",
             fontFamily: "'Aileron', 'Helvetica Neue', sans-serif",
             color: "#0a0a0a",
             overflow: "hidden",
-            display: "grid",
-            gridTemplateRows: "50dvh 50dvh",
+            touchAction: "none",
           }}
         >
           <div
             style={{
-              background: "#E3010F",
-              position: "relative",
-              padding: "4.5rem 2rem 1.35rem",
-              boxSizing: "border-box",
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              height: pictureHeight,
+              background: "#f4f1ea",
               overflow: "hidden",
+              zIndex: 1,
             }}
           >
-            <nav
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                right: 0,
-                zIndex: 30,
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "baseline",
-                gap: "0.75rem",
-                padding: "1.25rem 1.1rem",
-                boxSizing: "border-box",
-                width: "100%",
+            <motion.img
+              src="/IMG_2146.jpeg"
+              alt="Collective Textile founders"
+              initial={{
+                opacity: fromHome ? 0 : 1,
+                scale: fromHome ? 1.006 : 1,
               }}
-            >
-              <Link href="/archive" style={{ textDecoration: "none" }}>
-                <NavItem color="light" underlineColor="#f4f1ea">
-                  (archive)
-                </NavItem>
-              </Link>
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{
+                duration: fromHome ? 0.78 : 0,
+                delay: fromHome ? 0.04 : 0,
+                ease: EASE,
+              }}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                objectPosition: "center 58%",
+                display: "block",
+                background: "#f4f1ea",
+              }}
+            />
+          </div>
 
-              <Link href="/materials" style={{ textDecoration: "none" }}>
-                <NavItem color="light" underlineColor="#f4f1ea">
-                  (materials)
-                </NavItem>
-              </Link>
-
-              <Link href="/" style={{ textDecoration: "none" }}>
-                <NavItem color="light" underlineColor="#f4f1ea">
-                  (home)
-                </NavItem>
-              </Link>
-            </nav>
+          <motion.section
+            style={{
+              y: panelY,
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              height: "100dvh",
+              zIndex: 10,
+              background: "#E3010F",
+              boxSizing: "border-box",
+              padding: "2rem 1.75rem 1.35rem",
+              display: "flex",
+              flexDirection: "column",
+              willChange: "transform",
+            }}
+          >
+            <motion.img
+              src="/star.png"
+              alt="Collective Textile star mark"
+              initial={{ opacity: fromHome ? 0 : 1, y: fromHome ? 8 : 0 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: fromHome ? 0.62 : 0,
+                delay: fromHome ? 0.42 : 0,
+                ease: EASE,
+              }}
+              style={{
+                width: 47,
+                height: "auto",
+                display: "block",
+                margin: "0 0 1.05rem",
+              }}
+            />
 
             <motion.div
-              initial={{ opacity: 0, y: 8 }}
+              initial={{ opacity: fromHome ? 0 : 1, y: fromHome ? 10 : 0 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.85, delay: 0.12, ease: EASE }}
-              style={{
-                maxWidth: 276,
-                margin: "0 auto",
+              transition={{
+                duration: fromHome ? 0.68 : 0,
+                delay: fromHome ? 0.5 : 0,
+                ease: EASE,
               }}
             >
-              <img
-                src="/star.png"
-                alt="Collective Textile star mark"
-                style={{
-                  width: 48,
-                  height: "auto",
-                  display: "block",
-                  margin: "0 0 1.2rem",
-                }}
-              />
-
               <p
                 style={{
-                  fontSize: 9.4,
-                  lineHeight: 1.38,
-                  letterSpacing: "0.055em",
+                  fontSize: 10.6,
+                  lineHeight: 1.2,
+                  letterSpacing: "0.012em",
                   textTransform: "uppercase",
                   fontWeight: 700,
-                  margin: "0 0 0.62rem",
+                  margin: "0 0 0.92rem",
+                  maxWidth: 286,
                 }}
               >
                 Amidst the rapid tide of modernisation, the craft culture of the
                 Amazigh’s people still thrives with unwavering resilience,
-                safeguarding its most formidable asset.
+                safeguarding its most formidable asset:
               </p>
 
               <p
                 style={{
-                  fontSize: 9.4,
-                  lineHeight: 1.38,
-                  letterSpacing: "0.055em",
+                  fontSize: 10.6,
+                  lineHeight: 1.2,
+                  letterSpacing: "0.012em",
                   textTransform: "uppercase",
                   fontWeight: 700,
-                  margin: "0 0 0.72rem",
+                  margin: "0 0 1.35rem",
+                  maxWidth: 286,
                 }}
               >
                 The inherent spirit of playful creativity, that lies at the very
@@ -561,66 +707,74 @@ export default function AboutPage() {
 
               <p
                 style={{
-                  fontSize: 9.6,
-                  lineHeight: 1.38,
-                  letterSpacing: "0.005em",
-                  margin: "0 0 0.62rem",
+                  fontSize: 10.4,
+                  lineHeight: 1.24,
+                  letterSpacing: "0.002em",
+                  fontWeight: 400,
+                  margin: "0 0 1.2rem",
+                  maxWidth: 286,
                 }}
               >
-                Collective Textile showcases Moroccan carpets and textiles,
-                focusing on ancestral pattern repertoires formed over
-                generations. We source pieces crafted for domestic use by
-                sedentary or semi-nomadic women.
+                <strong style={{ fontWeight: 700 }}>Collective Textile</strong>{" "}
+                showcases Moroccan carpets and textiles, focusing on the
+                ancestral pattern repertoires formed over generations. We source
+                pieces crafted for domestic use by sedentary or semi-nomadic
+                women, spanning the early 20th century to the present day.
               </p>
 
               <p
                 style={{
-                  fontSize: 9.6,
-                  lineHeight: 1.38,
-                  letterSpacing: "0.005em",
-                  margin: 0,
+                  fontSize: 10.4,
+                  lineHeight: 1.24,
+                  letterSpacing: "0.002em",
+                  fontWeight: 400,
+                  margin: "0 0 1.45rem",
+                  maxWidth: 286,
                 }}
               >
                 Founded in Milan in 2018. Our catalogue is updated regularly —
                 contact us to purchase or make a special request.
               </p>
             </motion.div>
-          </div>
+          </motion.section>
 
-          <div
+          <nav
             style={{
-              position: "relative",
-              background: "#f4f1ea",
-              overflow: "hidden",
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              zIndex: 100,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "baseline",
+              gap: "0.75rem",
+              padding: "1.25rem 1.1rem",
+              boxSizing: "border-box",
+              width: "100%",
+              pointerEvents: "auto",
             }}
           >
-            <motion.img
-              src="/IMG_2146.jpeg"
-              alt="Collective Textile portrait"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1.05, delay: 0.12, ease: EASE }}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                objectPosition: "center center",
-                display: "block",
-              }}
-            />
+            <Link href="/archive" style={{ textDecoration: "none" }}>
+              <NavItem color="dark" underlineColor="#0a0a0a">
+                (archive)
+              </NavItem>
+            </Link>
 
-            <div
-              style={{
-                position: "absolute",
-                left: "1.1rem",
-                right: "1.1rem",
-                bottom: "1.15rem",
-                zIndex: 20,
-              }}
-            >
-              <MobileNewsletter />
-            </div>
-          </div>
+            <Link href="/materials" style={{ textDecoration: "none" }}>
+              <NavItem color="dark" underlineColor="#0a0a0a">
+                (materials)
+              </NavItem>
+            </Link>
+
+            <Link href="/" style={{ textDecoration: "none" }}>
+              <NavItem color="dark" underlineColor="#0a0a0a">
+                (home)
+              </NavItem>
+            </Link>
+          </nav>
+
+          <MobileNewsletter fromHome={fromHome} />
         </section>
       </main>
 
@@ -658,6 +812,8 @@ export default function AboutPage() {
             width: 100%;
             height: 100%;
             overflow: hidden;
+            overscroll-behavior: none;
+            background: #f4f1ea !important;
           }
         }
       `}</style>

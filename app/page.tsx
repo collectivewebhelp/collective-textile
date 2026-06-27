@@ -38,7 +38,7 @@ function MobileNewsletter({ leaving }: { leaving: boolean }) {
         y: leaving ? 4 : 0,
       }}
       transition={{
-        duration: leaving ? 0.42 : 0.72,
+        duration: leaving ? 0.34 : 0.72,
         delay: leaving ? 0 : 0.38,
         ease: EASE,
       }}
@@ -47,11 +47,13 @@ function MobileNewsletter({ leaving }: { leaving: boolean }) {
         left: "1.1rem",
         right: "1.1rem",
         bottom: "1.15rem",
-        zIndex: 30,
+        zIndex: 70,
         display: "flex",
         alignItems: "baseline",
         justifyContent: "space-between",
         gap: "0.85rem",
+        color: "#ffffff",
+        pointerEvents: leaving ? "none" : "auto",
       }}
     >
       <span
@@ -60,7 +62,7 @@ function MobileNewsletter({ leaving }: { leaving: boolean }) {
           fontSize: 10,
           letterSpacing: "0.08em",
           textTransform: "uppercase",
-          color: "#0a0a0a",
+          color: "#ffffff",
         }}
       >
         NEWSLETTER
@@ -85,7 +87,7 @@ function MobileNewsletter({ leaving }: { leaving: boolean }) {
             width: "100%",
             fontSize: 10,
             letterSpacing: "0.08em",
-            color: "#0a0a0a",
+            color: "#ffffff",
             outline: "none",
             textTransform: "uppercase",
           }}
@@ -105,7 +107,7 @@ function MobileNewsletter({ leaving }: { leaving: boolean }) {
             right: 0,
             bottom: 0,
             height: "1px",
-            background: "rgba(10,10,10,0.65)",
+            background: "rgba(255,255,255,0.8)",
             transformOrigin: "left center",
           }}
         />
@@ -121,7 +123,7 @@ function MobileNewsletter({ leaving }: { leaving: boolean }) {
           fontSize: 10,
           letterSpacing: "0.08em",
           textTransform: "uppercase",
-          color: "#0a0a0a",
+          color: "#ffffff",
           cursor: "pointer",
         }}
       >
@@ -166,7 +168,7 @@ export default function Page() {
 
     setTimeout(() => {
       router.push(href);
-    }, destination === "archive" ? 920 : 560);
+    }, destination === "archive" ? 920 : 500);
   }
 
   function goMobileAbout(event: MouseEvent<HTMLAnchorElement>) {
@@ -174,11 +176,12 @@ export default function Page() {
 
     if (leavingTo) return;
 
+    sessionStorage.setItem("ct-entry", "home-to-about");
     setLeavingTo("about");
 
     setTimeout(() => {
       router.push("/about");
-    }, 780);
+    }, 360);
   }
 
   const leavingArchive = leavingTo === "archive";
@@ -438,36 +441,45 @@ export default function Page() {
             inset: 0,
             overflow: "hidden",
             fontFamily: "'Aileron', 'Helvetica Neue', sans-serif",
-            background: "#ffffff",
+            background: "#000000",
             height: "100dvh",
           }}
         >
           <motion.img
-            src="/hero.webp"
+            src="/sheep.JPG"
             alt="Collective Textile mobile archive image"
-            initial={{ opacity: 0, scale: 1.004 }}
+            initial={{ opacity: 0, scale: 1.015 }}
             animate={{
-              opacity: leaving ? 0 : 1,
-              scale: leaving ? 0.996 : 1,
+              opacity: leavingArchive ? 0 : 1,
+              scale: leaving ? 1.004 : 1,
             }}
             transition={{
-              duration: leaving ? 0.62 : 0.9,
-              delay: leaving ? 0.06 : 0,
+              duration: leaving ? 0.42 : 0.95,
+              delay: 0,
               ease: EASE,
             }}
             style={{
               position: "absolute",
-              top: "3.1rem",
-              left: 0,
-              right: 0,
-              bottom: "3.75rem",
-              width: "100vw",
-              height: "calc(100dvh - 6.85rem)",
-              objectFit: "contain",
-              objectPosition: "center center",
+              top: -1,
+              left: -1,
+              width: "calc(100vw + 2px)",
+              height: "calc(100dvh + 2px)",
+              objectFit: "cover",
+              objectPosition: "42% center",
               zIndex: 0,
               display: "block",
-              background: "#ffffff",
+              filter: "grayscale(100%)",
+              background: "#000000",
+            }}
+          />
+
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              zIndex: 1,
+              background: "rgba(0,0,0,0.18)",
+              pointerEvents: "none",
             }}
           />
 
@@ -478,7 +490,7 @@ export default function Page() {
               y: leaving ? -6 : 0,
             }}
             transition={{
-              duration: leaving ? 0.42 : 0.65,
+              duration: leaving ? 0.3 : 0.65,
               delay: leaving ? 0 : 0.16,
               ease: EASE,
             }}
@@ -499,13 +511,13 @@ export default function Page() {
             }}
           >
             <Link href="/archive" style={{ textDecoration: "none" }}>
-              <NavItem color="dark" underlineColor="#0a0a0a">
+              <NavItem color="light" underlineColor="#f4f1ea">
                 (archive)
               </NavItem>
             </Link>
 
             <Link href="/materials" style={{ textDecoration: "none" }}>
-              <NavItem color="dark" underlineColor="#0a0a0a">
+              <NavItem color="light" underlineColor="#f4f1ea">
                 (materials)
               </NavItem>
             </Link>
@@ -515,38 +527,61 @@ export default function Page() {
               onClick={goMobileAbout}
               style={{ textDecoration: "none" }}
             >
-              <NavItem color="dark" underlineColor="#0a0a0a">
+              <NavItem color="light" underlineColor="#f4f1ea">
                 (about)
               </NavItem>
             </a>
           </motion.nav>
 
-          <MobileNewsletter leaving={leaving} />
-
           <motion.div
-            initial={{ y: "-100%" }}
-            animate={{ y: leavingAbout ? "0%" : "-100%" }}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{
+              opacity: leaving ? 0 : 1,
+              y: leaving ? 6 : 0,
+            }}
             transition={{
-              duration: 0.74,
+              duration: leaving ? 0.3 : 0.75,
+              delay: leaving ? 0 : 0.34,
               ease: EASE,
             }}
             style={{
               position: "fixed",
-              top: 0,
-              left: 0,
-              right: 0,
-              height: "50dvh",
-              background: "#E3010F",
-              zIndex: 80,
+              left: "50%",
+              top: "50%",
+              transform: "translate(-50%, -50%)",
+              zIndex: 25,
+              display: "flex",
+              justifyContent: "center",
               pointerEvents: "none",
             }}
-          />
+          >
+            <h1
+              style={{
+                margin: 0,
+                fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+                fontSize: 21,
+                lineHeight: 0.96,
+                letterSpacing: "-0.035em",
+                textTransform: "uppercase",
+                fontWeight: 800,
+                color: "#ffffff",
+                textAlign: "left",
+                width: "fit-content",
+              }}
+            >
+              COLLECTIVE
+              <br />
+              TEXTILE
+            </h1>
+          </motion.div>
+
+          <MobileNewsletter leaving={leaving} />
         </div>
       </div>
 
       <style>{`
         input::placeholder {
-          color: rgba(10,10,10,0.7);
+          color: rgba(255,255,255,0.78);
           font-weight: 500;
         }
 
@@ -579,6 +614,7 @@ export default function Page() {
 
           .mobile-layout {
             display: block;
+            background: #000000 !important;
           }
 
           .star-desktop {
@@ -590,7 +626,7 @@ export default function Page() {
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background: #ffffff !important;
+            background: #000000 !important;
           }
         }
       `}</style>
