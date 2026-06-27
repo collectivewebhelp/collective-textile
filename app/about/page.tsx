@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { motion, useMotionValue, useSpring } from "motion/react";
+import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import NavItem from "@/components/nav-item";
 import { ReturnHomeLink } from "@/components/page-transition";
 
@@ -18,7 +18,7 @@ function MobileNewsletter({ fromHome }: { fromHome: boolean }) {
       initial={{ opacity: 0, y: 5 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
-        duration: 0.7,
+        duration: 0.65,
         delay: fromHome ? 0.82 : 0.42,
         ease: EASE,
       }}
@@ -76,7 +76,7 @@ function MobileNewsletter({ fromHome }: { fromHome: boolean }) {
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
           transition={{
-            duration: 0.85,
+            duration: 0.8,
             delay: fromHome ? 0.92 : 0.52,
             ease: EASE,
           }}
@@ -123,16 +123,24 @@ export default function AboutPage() {
   const [pictureHeight, setPictureHeight] = useState(330);
 
   const panelTargetY = useMotionValue(330);
+
   const panelY = useSpring(panelTargetY, {
-    stiffness: 165,
+    stiffness: 260,
     damping: 38,
-    mass: 0.45,
+    mass: 0.32,
     restDelta: 0.001,
   });
+
+  const redContentPaddingTop = useTransform(
+    panelY,
+    [0, pictureHeight],
+    [82, 28]
+  );
 
   const pictureHeightRef = useRef(330);
   const panelTargetRef = useRef(330);
   const touchStartY = useRef<number | null>(null);
+  const touchTotalY = useRef(0);
   const initializedRef = useRef(false);
 
   useEffect(() => {
@@ -146,7 +154,7 @@ export default function AboutPage() {
       return Math.max(window.innerHeight * 0.43, 330);
     }
 
-    function setPanelPosition(next: number) {
+    function snapPanel(next: number) {
       const maxY = pictureHeightRef.current;
       const clamped = clamp(next, 0, maxY);
 
@@ -156,6 +164,7 @@ export default function AboutPage() {
 
     function updateSize() {
       const nextPictureHeight = getPictureHeight();
+
       pictureHeightRef.current = nextPictureHeight;
       setPictureHeight(nextPictureHeight);
 
@@ -167,16 +176,16 @@ export default function AboutPage() {
           panelTargetY.set(window.innerHeight + 40);
 
           window.setTimeout(() => {
-            setPanelPosition(nextPictureHeight);
-          }, 70);
+            snapPanel(nextPictureHeight);
+          }, 80);
         } else {
-          setPanelPosition(nextPictureHeight);
+          snapPanel(nextPictureHeight);
         }
 
         return;
       }
 
-      setPanelPosition(clamp(panelTargetRef.current, 0, nextPictureHeight));
+      snapPanel(clamp(panelTargetRef.current, 0, nextPictureHeight));
     }
 
     updateSize();
@@ -188,32 +197,37 @@ export default function AboutPage() {
   }, [fromHome, panelTargetY]);
 
   useEffect(() => {
-    function setPanelPosition(next: number) {
-      const maxY = pictureHeightRef.current;
-      const clamped = clamp(next, 0, maxY);
-
-      panelTargetRef.current = clamped;
-      panelTargetY.set(clamped);
+    function snapToTop() {
+      panelTargetRef.current = 0;
+      panelTargetY.set(0);
     }
 
-    function movePanel(delta: number) {
-      if (window.innerWidth >= 768) return;
+    function snapToRest() {
+      const rest = pictureHeightRef.current;
 
-      const next = panelTargetRef.current - delta * 0.32;
-      setPanelPosition(next);
+      panelTargetRef.current = rest;
+      panelTargetY.set(rest);
     }
 
     function onWheel(event: WheelEvent) {
       if (window.innerWidth >= 768) return;
 
       event.preventDefault();
-      movePanel(event.deltaY);
+
+      if (event.deltaY > 8) {
+        snapToTop();
+      }
+
+      if (event.deltaY < -8) {
+        snapToRest();
+      }
     }
 
     function onTouchStart(event: TouchEvent) {
       if (window.innerWidth >= 768) return;
 
       touchStartY.current = event.touches[0]?.clientY ?? null;
+      touchTotalY.current = 0;
     }
 
     function onTouchMove(event: TouchEvent) {
@@ -225,12 +239,23 @@ export default function AboutPage() {
       const currentY = event.touches[0]?.clientY ?? touchStartY.current;
       const delta = touchStartY.current - currentY;
 
+      touchTotalY.current += delta;
       touchStartY.current = currentY;
-      movePanel(delta * 0.72);
     }
 
     function onTouchEnd() {
+      const threshold = 26;
+
+      if (touchTotalY.current > threshold) {
+        snapToTop();
+      }
+
+      if (touchTotalY.current < -threshold) {
+        snapToRest();
+      }
+
       touchStartY.current = null;
+      touchTotalY.current = 0;
     }
 
     window.addEventListener("wheel", onWheel, { passive: false });
@@ -640,7 +665,10 @@ export default function AboutPage() {
               zIndex: 10,
               background: "#E3010F",
               boxSizing: "border-box",
-              padding: "5.15rem 1.75rem 1.35rem",
+              paddingTop: redContentPaddingTop,
+              paddingLeft: "1.75rem",
+              paddingRight: "1.75rem",
+              paddingBottom: "1.35rem",
               display: "flex",
               flexDirection: "column",
               willChange: "transform",
@@ -657,10 +685,10 @@ export default function AboutPage() {
                 ease: EASE,
               }}
               style={{
-                width: 47,
+                width: 43,
                 height: "auto",
                 display: "block",
-                margin: "0 0 1.05rem",
+                margin: "0 0 0.85rem",
               }}
             />
 
@@ -675,12 +703,12 @@ export default function AboutPage() {
             >
               <p
                 style={{
-                  fontSize: 10.6,
-                  lineHeight: 1.2,
-                  letterSpacing: "0.012em",
+                  fontSize: 10.15,
+                  lineHeight: 1.13,
+                  letterSpacing: "0.01em",
                   textTransform: "uppercase",
                   fontWeight: 700,
-                  margin: "0 0 0.92rem",
+                  margin: "0 0 0.72rem",
                   maxWidth: 286,
                 }}
               >
@@ -691,12 +719,12 @@ export default function AboutPage() {
 
               <p
                 style={{
-                  fontSize: 10.6,
-                  lineHeight: 1.2,
-                  letterSpacing: "0.012em",
+                  fontSize: 10.15,
+                  lineHeight: 1.13,
+                  letterSpacing: "0.01em",
                   textTransform: "uppercase",
                   fontWeight: 700,
-                  margin: "0 0 1.35rem",
+                  margin: "0 0 0.95rem",
                   maxWidth: 286,
                 }}
               >
@@ -706,11 +734,11 @@ export default function AboutPage() {
 
               <p
                 style={{
-                  fontSize: 10.4,
-                  lineHeight: 1.24,
-                  letterSpacing: "0.002em",
+                  fontSize: 9.95,
+                  lineHeight: 1.18,
+                  letterSpacing: "0.001em",
                   fontWeight: 400,
-                  margin: "0 0 1.2rem",
+                  margin: "0 0 0.92rem",
                   maxWidth: 286,
                 }}
               >
@@ -723,11 +751,11 @@ export default function AboutPage() {
 
               <p
                 style={{
-                  fontSize: 10.4,
-                  lineHeight: 1.24,
-                  letterSpacing: "0.002em",
+                  fontSize: 9.95,
+                  lineHeight: 1.18,
+                  letterSpacing: "0.001em",
                   fontWeight: 400,
-                  margin: "0 0 1.45rem",
+                  margin: 0,
                   maxWidth: 286,
                 }}
               >
