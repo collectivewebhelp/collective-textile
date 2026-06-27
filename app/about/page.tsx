@@ -123,11 +123,11 @@ export default function AboutPage() {
   const [pictureHeight, setPictureHeight] = useState(295);
   const panelTargetY = useMotionValue(900);
   const panelY = useSpring(panelTargetY, {
-    stiffness: 76,
-    damping: 24,
-    mass: 0.72,
-    restDelta: 0.001,
-  });
+  stiffness: 145,
+  damping: 34,
+  mass: 0.55,
+  restDelta: 0.001,
+});
 
   const pictureHeightRef = useRef(295);
   const panelTargetRef = useRef(900);
@@ -142,7 +142,7 @@ export default function AboutPage() {
 
   useEffect(() => {
     function getPictureHeight() {
-      return Math.max(window.innerHeight * 0.41, 295);
+      return Math.max(window.innerHeight * 0.37, 285);
     }
 
     function setPanelPosition(next: number) {
@@ -200,7 +200,7 @@ export default function AboutPage() {
     function movePanel(delta: number) {
       if (window.innerWidth >= 768) return;
 
-      const next = panelTargetRef.current - delta * 0.62;
+      const next = panelTargetRef.current - delta * 0.42;
       setPanelPosition(next);
     }
 
@@ -623,7 +623,7 @@ export default function AboutPage() {
                 width: "100%",
                 height: "100%",
                 objectFit: "cover",
-                objectPosition: "center 58%",
+                objectPosition: "center 64%",
                 display: "block",
                 background: "#f4f1ea",
               }}
