@@ -120,17 +120,18 @@ export default function AboutPage() {
 
   const fromHome = entryMode === "home-to-about";
 
-  const [pictureHeight, setPictureHeight] = useState(295);
-  const panelTargetY = useMotionValue(900);
-  const panelY = useSpring(panelTargetY, {
-  stiffness: 145,
-  damping: 34,
-  mass: 0.55,
-  restDelta: 0.001,
-});
+  const [pictureHeight, setPictureHeight] = useState(330);
 
-  const pictureHeightRef = useRef(295);
-  const panelTargetRef = useRef(900);
+  const panelTargetY = useMotionValue(330);
+  const panelY = useSpring(panelTargetY, {
+    stiffness: 165,
+    damping: 38,
+    mass: 0.45,
+    restDelta: 0.001,
+  });
+
+  const pictureHeightRef = useRef(330);
+  const panelTargetRef = useRef(330);
   const touchStartY = useRef<number | null>(null);
   const initializedRef = useRef(false);
 
@@ -142,7 +143,7 @@ export default function AboutPage() {
 
   useEffect(() => {
     function getPictureHeight() {
-      return Math.max(window.innerHeight * 0.37, 285);
+      return Math.max(window.innerHeight * 0.43, 330);
     }
 
     function setPanelPosition(next: number) {
@@ -175,9 +176,7 @@ export default function AboutPage() {
         return;
       }
 
-      setPanelPosition(
-        clamp(panelTargetRef.current, 0, nextPictureHeight)
-      );
+      setPanelPosition(clamp(panelTargetRef.current, 0, nextPictureHeight));
     }
 
     updateSize();
@@ -200,7 +199,7 @@ export default function AboutPage() {
     function movePanel(delta: number) {
       if (window.innerWidth >= 768) return;
 
-      const next = panelTargetRef.current - delta * 0.42;
+      const next = panelTargetRef.current - delta * 0.32;
       setPanelPosition(next);
     }
 
@@ -227,7 +226,7 @@ export default function AboutPage() {
       const delta = touchStartY.current - currentY;
 
       touchStartY.current = currentY;
-      movePanel(delta * 1.05);
+      movePanel(delta * 0.72);
     }
 
     function onTouchEnd() {
@@ -623,7 +622,7 @@ export default function AboutPage() {
                 width: "100%",
                 height: "100%",
                 objectFit: "cover",
-                objectPosition: "center 64%",
+                objectPosition: "center 52%",
                 display: "block",
                 background: "#f4f1ea",
               }}
@@ -641,7 +640,7 @@ export default function AboutPage() {
               zIndex: 10,
               background: "#E3010F",
               boxSizing: "border-box",
-              padding: "2rem 1.75rem 1.35rem",
+              padding: "5.15rem 1.75rem 1.35rem",
               display: "flex",
               flexDirection: "column",
               willChange: "transform",
