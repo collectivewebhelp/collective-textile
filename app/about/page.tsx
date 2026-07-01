@@ -703,7 +703,7 @@ export default function AboutPage() {
             >
               <p
                 style={{
-                  fontSize: 11.8,
+                  fontSize: 12.4,
                   lineHeight: 1.14,
                   letterSpacing: "0.008em",
                   textTransform: "uppercase",
@@ -719,7 +719,7 @@ export default function AboutPage() {
 
               <p
                 style={{
-                  fontSize: 11.8,
+                  fontSize: 12.4,
                   lineHeight: 1.14,
                   letterSpacing: "0.008em",
                   textTransform: "uppercase",
@@ -734,7 +734,7 @@ export default function AboutPage() {
 
               <p
                 style={{
-                  fontSize: 11.05,
+                  fontSize: 11.4,
                   lineHeight: 1.2,
                   letterSpacing: "0.001em",
                   fontWeight: 400,
@@ -751,7 +751,7 @@ export default function AboutPage() {
 
               <p
                 style={{
-                  fontSize: 11.05,
+                  fontSize: 11.4,
                   lineHeight: 1.2,
                   letterSpacing: "0.001em",
                   fontWeight: 400,
