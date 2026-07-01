@@ -12,17 +12,27 @@ function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
 }
 
-function MobileNewsletter({ fromHome }: { fromHome: boolean }) {
+function MobileNewsletter({
+  fromHome,
+  opacity,
+  y,
+}: {
+  fromHome: boolean;
+  opacity: any;
+  y: any;
+}) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 5 }}
-      animate={{ opacity: 1, y: 0 }}
+      initial={{ opacity: fromHome ? 0 : 1 }}
+      animate={{ opacity: 1 }}
       transition={{
-        duration: 0.65,
+        duration: 0.45,
         delay: fromHome ? 0.82 : 0.42,
         ease: EASE,
       }}
       style={{
+        opacity,
+        y,
         position: "absolute",
         left: "1.5rem",
         right: "1.5rem",
@@ -229,6 +239,9 @@ export default function AboutPage() {
     [0, pictureHeight],
     [82, 28]
   );
+
+  const mobileNewsletterOpacity = useTransform(panelY, [0, 70], [1, 0]);
+  const mobileNewsletterY = useTransform(panelY, [0, 70], [0, 10]);
 
   const pictureHeightRef = useRef(330);
   const panelTargetRef = useRef(330);
@@ -1070,7 +1083,11 @@ export default function AboutPage() {
             </Link>
           </nav>
 
-          <MobileNewsletter fromHome={fromHome} />
+          <MobileNewsletter
+            fromHome={fromHome}
+            opacity={mobileNewsletterOpacity}
+            y={mobileNewsletterY}
+          />
         </section>
       </main>
 
