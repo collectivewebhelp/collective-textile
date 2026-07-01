@@ -24,8 +24,8 @@ function MobileNewsletter({ fromHome }: { fromHome: boolean }) {
       }}
       style={{
         position: "absolute",
-        left: "1.75rem",
-        right: "1.75rem",
+        left: "1.5rem",
+        right: "1.5rem",
         bottom: "1.35rem",
         zIndex: 90,
         display: "flex",
@@ -666,8 +666,8 @@ export default function AboutPage() {
               background: "#E3010F",
               boxSizing: "border-box",
               paddingTop: redContentPaddingTop,
-              paddingLeft: "1.75rem",
-              paddingRight: "1.75rem",
+              paddingLeft: "1.5rem",
+              paddingRight: "1.5rem",
               paddingBottom: "1.35rem",
               display: "flex",
               flexDirection: "column",
@@ -703,13 +703,13 @@ export default function AboutPage() {
             >
               <p
                 style={{
-                  fontSize: 10.15,
-                  lineHeight: 1.13,
-                  letterSpacing: "0.01em",
+                  fontSize: 11.8,
+                  lineHeight: 1.14,
+                  letterSpacing: "0.008em",
                   textTransform: "uppercase",
                   fontWeight: 700,
                   margin: "0 0 0.72rem",
-                  maxWidth: 286,
+                  maxWidth: 318,
                 }}
               >
                 Amidst the rapid tide of modernisation, the craft culture of the
@@ -719,13 +719,13 @@ export default function AboutPage() {
 
               <p
                 style={{
-                  fontSize: 10.15,
-                  lineHeight: 1.13,
-                  letterSpacing: "0.01em",
+                  fontSize: 11.8,
+                  lineHeight: 1.14,
+                  letterSpacing: "0.008em",
                   textTransform: "uppercase",
                   fontWeight: 700,
                   margin: "0 0 0.95rem",
-                  maxWidth: 286,
+                  maxWidth: 318,
                 }}
               >
                 The inherent spirit of playful creativity, that lies at the very
@@ -734,12 +734,12 @@ export default function AboutPage() {
 
               <p
                 style={{
-                  fontSize: 9.95,
-                  lineHeight: 1.18,
+                  fontSize: 11.05,
+                  lineHeight: 1.2,
                   letterSpacing: "0.001em",
                   fontWeight: 400,
                   margin: "0 0 0.92rem",
-                  maxWidth: 286,
+                  maxWidth: 318,
                 }}
               >
                 <strong style={{ fontWeight: 700 }}>Collective Textile</strong>{" "}
@@ -751,12 +751,12 @@ export default function AboutPage() {
 
               <p
                 style={{
-                  fontSize: 9.95,
-                  lineHeight: 1.18,
+                  fontSize: 11.05,
+                  lineHeight: 1.2,
                   letterSpacing: "0.001em",
                   fontWeight: 400,
                   margin: 0,
-                  maxWidth: 286,
+                  maxWidth: 318,
                 }}
               >
                 Founded in Milan in 2018. Our catalogue is updated regularly —
