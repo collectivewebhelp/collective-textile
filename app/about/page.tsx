@@ -112,6 +112,99 @@ function MobileNewsletter({ fromHome }: { fromHome: boolean }) {
   );
 }
 
+function TabletNewsletter({ fromHome }: { fromHome: boolean }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 5 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: 0.75,
+        delay: fromHome ? 0.55 : 0.35,
+        ease: EASE,
+      }}
+      style={{
+        display: "flex",
+        alignItems: "baseline",
+        gap: "1rem",
+        paddingTop: "2rem",
+      }}
+    >
+      <span
+        style={{
+          fontFamily: "'Courier New', Courier, monospace",
+          fontSize: 10,
+          letterSpacing: "0.12em",
+          textTransform: "uppercase",
+          color: "#0a0a0a",
+        }}
+      >
+        NEWSLETTER
+      </span>
+
+      <div
+        style={{
+          position: "relative",
+          width: 180,
+          paddingBottom: "0.2rem",
+        }}
+      >
+        <input
+          type="email"
+          placeholder="(EMAIL)"
+          style={{
+            fontFamily: "'Courier New', Courier, monospace",
+            background: "transparent",
+            border: "none",
+            padding: "0",
+            width: "100%",
+            fontSize: 10,
+            letterSpacing: "0.1em",
+            color: "#0a0a0a",
+            outline: "none",
+            textTransform: "uppercase",
+          }}
+        />
+
+        <motion.div
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{
+            duration: 0.8,
+            delay: fromHome ? 0.7 : 0.5,
+            ease: EASE,
+          }}
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            bottom: 0,
+            height: "1px",
+            background: "rgba(10,10,10,0.65)",
+            transformOrigin: "left center",
+          }}
+        />
+      </div>
+
+      <button
+        type="submit"
+        style={{
+          background: "none",
+          border: "none",
+          padding: 0,
+          fontFamily: "'Courier New', Courier, monospace",
+          fontSize: 10,
+          letterSpacing: "0.12em",
+          textTransform: "uppercase",
+          color: "#0a0a0a",
+          cursor: "pointer",
+        }}
+      >
+        SEND
+      </button>
+    </motion.div>
+  );
+}
+
 export default function AboutPage() {
   const [entryMode] = useState<string | null>(() => {
     if (typeof window === "undefined") return null;
@@ -604,6 +697,182 @@ export default function AboutPage() {
         </motion.section>
       </main>
 
+      <main className="about-tablet">
+        <section
+          style={{
+            minHeight: "100vh",
+            background: "#f4f1ea",
+            fontFamily: "'Aileron', 'Helvetica Neue', sans-serif",
+            color: "#0a0a0a",
+            overflow: "hidden",
+          }}
+        >
+          <motion.nav
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{
+              duration: 0.65,
+              delay: fromHome ? 0.18 : 0,
+              ease: EASE,
+            }}
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              zIndex: 60,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "baseline",
+              gap: "1rem",
+              padding: "1.35rem 1.75rem",
+              boxSizing: "border-box",
+              pointerEvents: "auto",
+            }}
+          >
+            <Link href="/archive" style={{ textDecoration: "none" }}>
+              <NavItem color="dark" underlineColor="#0a0a0a">
+                (archive)
+              </NavItem>
+            </Link>
+
+            <Link href="/materials" style={{ textDecoration: "none" }}>
+              <NavItem color="dark" underlineColor="#0a0a0a">
+                (materials)
+              </NavItem>
+            </Link>
+
+            <ReturnHomeLink variant="about" style={{ textDecoration: "none" }}>
+              <NavItem color="dark" underlineColor="#0a0a0a">
+                (home)
+              </NavItem>
+            </ReturnHomeLink>
+          </motion.nav>
+
+          <motion.div
+            initial={{ opacity: fromHome ? 0 : 1 }}
+            animate={{ opacity: 1 }}
+            transition={{
+              duration: 0.85,
+              delay: fromHome ? 0.08 : 0,
+              ease: EASE,
+            }}
+            style={{
+              height: "46vh",
+              minHeight: 360,
+              background: "#f4f1ea",
+              overflow: "hidden",
+            }}
+          >
+            <img
+              src="/IMG_2146.jpeg"
+              alt="Collective Textile founders"
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                objectPosition: "center 34%",
+                display: "block",
+              }}
+            />
+          </motion.div>
+
+          <motion.section
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.85,
+              delay: fromHome ? 0.28 : 0.16,
+              ease: EASE,
+            }}
+            style={{
+              background: "#E3010F",
+              minHeight: "54vh",
+              padding: "4.8rem 3rem 3rem",
+              boxSizing: "border-box",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+            }}
+          >
+            <div style={{ maxWidth: 620 }}>
+              <img
+                src="/star.png"
+                alt="Collective Textile star mark"
+                style={{
+                  width: 52,
+                  height: "auto",
+                  display: "block",
+                  margin: "0 0 1.15rem",
+                }}
+              />
+
+              <p
+                style={{
+                  fontSize: 22,
+                  lineHeight: 1.12,
+                  letterSpacing: "0.015em",
+                  textTransform: "uppercase",
+                  fontWeight: 700,
+                  margin: "0 0 1rem",
+                }}
+              >
+                Amidst the rapid tide of modernisation, the craft culture of the
+                Amazigh people still thrives with unwavering resilience,
+                safeguarding its most formidable asset:
+              </p>
+
+              <p
+                style={{
+                  fontSize: 22,
+                  lineHeight: 1.12,
+                  letterSpacing: "0.015em",
+                  textTransform: "uppercase",
+                  fontWeight: 700,
+                  margin: "0 0 1.4rem",
+                }}
+              >
+                The inherent spirit of playful creativity, that lies at the very
+                core of its existence.
+              </p>
+
+              <p
+                style={{
+                  fontSize: 14.5,
+                  lineHeight: 1.48,
+                  letterSpacing: "0.015em",
+                  fontWeight: 400,
+                  margin: "0 0 1rem",
+                  maxWidth: 560,
+                }}
+              >
+                <strong style={{ fontWeight: 700 }}>Collective Textile</strong>{" "}
+                showcases Moroccan carpets and textiles, focusing on the
+                ancestral pattern repertoires formed over generations. We source
+                pieces crafted for domestic use by sedentary or semi-nomadic
+                women, spanning the early 20th century to the present day.
+              </p>
+
+              <p
+                style={{
+                  fontSize: 14.5,
+                  lineHeight: 1.48,
+                  letterSpacing: "0.015em",
+                  fontWeight: 400,
+                  margin: 0,
+                  maxWidth: 560,
+                }}
+              >
+                Founded in Milan in 2018. Our catalogue is updated regularly —
+                contact us to purchase or make a special request.
+              </p>
+            </div>
+
+            <TabletNewsletter fromHome={fromHome} />
+          </motion.section>
+        </section>
+      </main>
+
       <main className="about-mobile">
         <section
           style={{
@@ -806,7 +1075,8 @@ export default function AboutPage() {
       </main>
 
       <style>{`
-        .about-desktop {
+        .about-desktop,
+        .about-tablet {
           display: none !important;
         }
 
@@ -823,13 +1093,37 @@ export default function AboutPage() {
           border-bottom-color: currentColor !important;
         }
 
-        @media (min-width: 768px) {
+        @media (min-width: 768px) and (max-width: 1199px) {
+          .about-mobile,
+          .about-desktop {
+            display: none !important;
+          }
+
+          .about-tablet {
+            display: block !important;
+          }
+
+          html,
+          body {
+            overflow: auto;
+            background: #f4f1ea !important;
+          }
+        }
+
+        @media (min-width: 1200px) {
           .about-desktop {
             display: grid !important;
           }
 
-          .about-mobile {
+          .about-mobile,
+          .about-tablet {
             display: none !important;
+          }
+
+          html,
+          body {
+            overflow: hidden;
+            background: #f4f1ea !important;
           }
         }
 
