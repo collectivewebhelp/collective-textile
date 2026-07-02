@@ -390,7 +390,7 @@ export default function ArchivePage() {
           }
 
           main > section {
-            padding: 5rem 0 3.2rem !important;
+            padding: 6.2rem 1.15rem 4.5rem !important;
             box-sizing: border-box;
           }
 
@@ -398,24 +398,29 @@ export default function ArchivePage() {
             display: flex !important;
             flex-direction: column !important;
             align-items: center !important;
-            gap: 0 !important;
+            gap: 5.4rem !important;
             width: 100%;
           }
 
           .rug-card {
-            width: 100vw !important;
-            height: calc(100dvh - 5.2rem) !important;
-            padding: 0 1.8rem !important;
+            width: 100% !important;
+            height: auto !important;
+            min-height: 0 !important;
+            padding: 0 !important;
             box-sizing: border-box !important;
+            display: flex !important;
             align-items: center !important;
             justify-content: center !important;
             cursor: default !important;
           }
 
           .rug-card img {
+            width: min(86vw, 360px) !important;
+            height: auto !important;
             max-width: 100% !important;
-            max-height: 100% !important;
+            max-height: 76dvh !important;
             object-fit: contain !important;
+            display: block !important;
           }
 
           .rug-detail {
