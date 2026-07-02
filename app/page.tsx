@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState, type MouseEvent } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
@@ -445,9 +446,7 @@ export default function Page() {
             height: "100dvh",
           }}
         >
-          <motion.img
-            src="/sheep.JPG"
-            alt="Collective Textile mobile archive image"
+          <motion.div
             initial={{ opacity: 0, scale: 1.015 }}
             animate={{
               opacity: leavingArchive ? 0 : 1,
@@ -464,14 +463,27 @@ export default function Page() {
               left: -1,
               width: "calc(100vw + 2px)",
               height: "calc(100dvh + 2px)",
-              objectFit: "cover",
-              objectPosition: "42% center",
               zIndex: 0,
               display: "block",
-              filter: "grayscale(100%)",
               background: "#000000",
+              overflow: "hidden",
+              willChange: "transform, opacity",
             }}
-          />
+          >
+            <Image
+              src="/sheep.JPG"
+              alt="Collective Textile mobile archive image"
+              fill
+              priority
+              quality={100}
+              sizes="100vw"
+              style={{
+                objectFit: "cover",
+                objectPosition: "42% center",
+                filter: "grayscale(100%)",
+              }}
+            />
+          </motion.div>
 
           <div
             style={{
