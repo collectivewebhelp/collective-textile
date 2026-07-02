@@ -13,23 +13,14 @@ function clamp(value: number, min: number, max: number) {
 }
 
 function MobileNewsletter({
-  fromHome,
   opacity,
   y,
 }: {
-  fromHome: boolean;
   opacity: any;
   y: any;
 }) {
   return (
     <motion.div
-      initial={{ opacity: fromHome ? 0 : 1 }}
-      animate={{ opacity: 1 }}
-      transition={{
-        duration: 0.45,
-        delay: fromHome ? 0.82 : 0.42,
-        ease: EASE,
-      }}
       style={{
         opacity,
         y,
@@ -62,7 +53,9 @@ function MobileNewsletter({
           position: "relative",
           flex: 1,
           maxWidth: 122,
+          height: 14,
           paddingBottom: "0.18rem",
+          overflow: "hidden",
         }}
       >
         <input
@@ -73,12 +66,15 @@ function MobileNewsletter({
             background: "transparent",
             border: "none",
             padding: "0",
-            width: "100%",
-            fontSize: 10,
+            width: "160%",
+            fontSize: 16,
+            lineHeight: 1,
             letterSpacing: "0.08em",
             color: "#0a0a0a",
             outline: "none",
             textTransform: "uppercase",
+            transform: "scale(0.625)",
+            transformOrigin: "left top",
           }}
         />
 
@@ -87,7 +83,7 @@ function MobileNewsletter({
           animate={{ scaleX: 1 }}
           transition={{
             duration: 0.8,
-            delay: fromHome ? 0.92 : 0.52,
+            delay: 0.52,
             ease: EASE,
           }}
           style={{
@@ -155,7 +151,9 @@ function TabletNewsletter({ fromHome }: { fromHome: boolean }) {
         style={{
           position: "relative",
           width: 180,
+          height: 15,
           paddingBottom: "0.2rem",
+          overflow: "hidden",
         }}
       >
         <input
@@ -166,12 +164,15 @@ function TabletNewsletter({ fromHome }: { fromHome: boolean }) {
             background: "transparent",
             border: "none",
             padding: "0",
-            width: "100%",
-            fontSize: 10,
+            width: "160%",
+            fontSize: 16,
+            lineHeight: 1,
             letterSpacing: "0.1em",
             color: "#0a0a0a",
             outline: "none",
             textTransform: "uppercase",
+            transform: "scale(0.625)",
+            transformOrigin: "left top",
           }}
         />
 
@@ -549,95 +550,6 @@ export default function AboutPage() {
             Founded in Milan in 2018. Our catalogue is updated regularly —
             contact us to purchase or make a special request.
           </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{
-              duration: 0.75,
-              delay: fromHome ? 0.62 : 0.72,
-              ease: EASE,
-            }}
-            style={{
-              marginTop: "auto",
-              paddingTop: "1.35rem",
-              display: "flex",
-              alignItems: "baseline",
-              gap: "1rem",
-            }}
-          >
-            <span
-              style={{
-                fontSize: 10,
-                letterSpacing: "0.18em",
-                textTransform: "uppercase",
-                color: "rgba(10,10,10,0.7)",
-                fontWeight: 700,
-              }}
-            >
-              Newsletter
-            </span>
-
-            <div
-              style={{
-                position: "relative",
-                width: 160,
-                paddingBottom: "0.2rem",
-              }}
-            >
-              <input
-                type="email"
-                placeholder="(Email)"
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  padding: "0.15rem 0.3rem",
-                  width: "100%",
-                  fontSize: 10,
-                  letterSpacing: "0.1em",
-                  color: "#0a0a0a",
-                  outline: "none",
-                }}
-              />
-
-              <motion.div
-                initial={{ scaleX: 0 }}
-                animate={{ scaleX: 1 }}
-                transition={{
-                  duration: 0.9,
-                  delay: fromHome ? 0.78 : 0.9,
-                  ease: EASE,
-                }}
-                style={{
-                  position: "absolute",
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  height: "1px",
-                  background: "rgba(10,10,10,0.4)",
-                  transformOrigin: "left center",
-                }}
-              />
-            </div>
-
-            <button
-              type="submit"
-              style={{
-                background: "none",
-                border: "none",
-                padding: 0,
-                fontSize: 10,
-                letterSpacing: "0.18em",
-                textTransform: "uppercase",
-                color: "rgba(10,10,10,0.7)",
-                fontWeight: 700,
-                cursor: "pointer",
-                fontFamily: "'Aileron', 'Helvetica Neue', sans-serif",
-              }}
-            >
-              Send
-            </button>
-          </motion.div>
         </motion.section>
 
         <motion.section
@@ -861,9 +773,7 @@ export default function AboutPage() {
               >
                 <strong style={{ fontWeight: 700 }}>Collective Textile</strong>{" "}
                 showcases Moroccan carpets and textiles, focusing on the
-                ancestral pattern repertoires formed over generations. We source
-                pieces crafted for domestic use by sedentary or semi-nomadic
-                women, spanning the early 20th century to the present day.
+                ancestral pattern repertoires formed over generations.
               </p>
 
               <p
@@ -1084,7 +994,6 @@ export default function AboutPage() {
           </nav>
 
           <MobileNewsletter
-            fromHome={fromHome}
             opacity={mobileNewsletterOpacity}
             y={mobileNewsletterY}
           />
