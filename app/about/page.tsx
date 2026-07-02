@@ -118,6 +118,48 @@ function MobileNewsletter({
   );
 }
 
+function MobileSocialLinks({
+  opacity,
+  y,
+}: {
+  opacity: any;
+  y: any;
+}) {
+  return (
+    <motion.div
+      style={{
+        opacity,
+        y,
+        display: "flex",
+        alignItems: "baseline",
+        gap: "1.35rem",
+        marginTop: "1.05rem",
+        pointerEvents: "auto",
+      }}
+    >
+      <a
+        href="https://www.instagram.com/collective_textile/"
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ textDecoration: "none" }}
+      >
+        <NavItem color="dark" underlineColor="#0a0a0a">
+          (instagram)
+        </NavItem>
+      </a>
+
+      <a
+        href="mailto:collectivetextile@gmail.com"
+        style={{ textDecoration: "none" }}
+      >
+        <NavItem color="dark" underlineColor="#0a0a0a">
+          (email)
+        </NavItem>
+      </a>
+    </motion.div>
+  );
+}
+
 function TabletNewsletter({ fromHome }: { fromHome: boolean }) {
   return (
     <motion.div
@@ -229,9 +271,9 @@ export default function AboutPage() {
   const panelTargetY = useMotionValue(330);
 
   const panelY = useSpring(panelTargetY, {
-    stiffness: 260,
-    damping: 38,
-    mass: 0.32,
+    stiffness: 320,
+    damping: 42,
+    mass: 0.28,
     restDelta: 0.001,
   });
 
@@ -241,8 +283,8 @@ export default function AboutPage() {
     [82, 28]
   );
 
-  const mobileNewsletterOpacity = useTransform(panelY, [0, 70], [1, 0]);
-  const mobileNewsletterY = useTransform(panelY, [0, 70], [0, 10]);
+  const mobileRevealOpacity = useTransform(panelY, [0, 70], [1, 0]);
+  const mobileRevealY = useTransform(panelY, [0, 70], [0, 10]);
 
   const pictureHeightRef = useRef(330);
   const panelTargetRef = useRef(330);
@@ -277,18 +319,7 @@ export default function AboutPage() {
 
       if (!initializedRef.current) {
         initializedRef.current = true;
-
-        if (fromHome) {
-          panelTargetRef.current = window.innerHeight + 40;
-          panelTargetY.set(window.innerHeight + 40);
-
-          window.setTimeout(() => {
-            snapPanel(nextPictureHeight);
-          }, 80);
-        } else {
-          snapPanel(nextPictureHeight);
-        }
-
+        snapPanel(nextPictureHeight);
         return;
       }
 
@@ -301,7 +332,7 @@ export default function AboutPage() {
     return () => {
       window.removeEventListener("resize", updateSize);
     };
-  }, [fromHome, panelTargetY]);
+  }, [panelTargetY]);
 
   useEffect(() => {
     function snapToTop() {
@@ -954,6 +985,8 @@ export default function AboutPage() {
                 Founded in Milan in 2018. Our catalogue is updated regularly —
                 contact us to purchase or make a special request.
               </p>
+
+              <MobileSocialLinks opacity={mobileRevealOpacity} y={mobileRevealY} />
             </motion.div>
           </motion.section>
 
@@ -993,10 +1026,7 @@ export default function AboutPage() {
             </Link>
           </nav>
 
-          <MobileNewsletter
-            opacity={mobileNewsletterOpacity}
-            y={mobileNewsletterY}
-          />
+          <MobileNewsletter opacity={mobileRevealOpacity} y={mobileRevealY} />
         </section>
       </main>
 
