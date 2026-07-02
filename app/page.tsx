@@ -475,7 +475,7 @@ export default function Page() {
               alt="Collective Textile mobile archive image"
               fill
               priority
-              quality={100}
+              quality={75}
               sizes="100vw"
               style={{
                 objectFit: "cover",
